@@ -1,0 +1,34 @@
+{
+  "type": "close_position",
+  "filter": "close_position",
+  "timestamp": 1741096386000,
+  "raw": {
+    "signature": "E0hE7F1osA+Nq1UrISzSYoNs1j9tOH1d6MLX1nDLwzkovr2yTRZ/EvaMq4//rJJ8ezX+BZEn3nuQvZfL+OHJBQ==",
+    "slot": "0",
+    "logs": [
+      "Program 13gDzEXCdocbj8iAiqrScGo47NiSuYENGsRqi3SEAwet invoke [1]",
+      "Program log: Instruction: ClosePositionLong",
+      "Program 13gDzEXCdocbj8iAiqrScGo47NiSuYENGsRqi3SEAwet success"
+    ],
+    "err": null
+  },
+  "decoded": {
+    "owner": "BEG3gUbuzgfc8gAoKx3rN1U2bv9EWkseo99QU3w8322A",
+    "position": "GZ9XfWwgTRhkma2Y91Q9r1XKotNXYjBnKKabj19rhT71",
+    "custody_mint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+    "custody_seed": [],
+    "side": 1,
+    "size_usd": "198517164",
+    "price": "115554680",
+    "collateral_amount_usd": "19851716",
+    "profit_usd": "2262936",
+    "loss_usd": "0",
+    "borrow_fee_usd": "13",
+    "exit_fee_usd": "279320",
+    "position_id": "9999",
+    "percentage": "1000000",
+    "funding_paid_usd": "0",
+    "funding_received_usd": "0",
+    "pool_type": 0
+  }
+}
