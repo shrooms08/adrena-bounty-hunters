@@ -357,3 +357,4 @@ Look for events with `method` in `addCollateralLong` / `addCollateralShort`. (Yo
 - **`null` PnL.** `pnl` is `null` while `status = open`. It's populated on full close / liquidate. Partial decreases populate `decrease_pnl`.
 - **Liquidations are losses.** A `status = liquidate` row always has negative `pnl`; the trader lost (most or all of) their collateral.
 - **Symbol normalization.** Trade math treats `BTC` as `WBTC` and prices `JITOSOL` via `SOLUSD`. The position row reports the symbol the trader actually traded (e.g. `JITOSOL`), not the price-feed symbol.
+
