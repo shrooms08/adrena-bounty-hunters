@@ -54,7 +54,14 @@ Shared mock: `scripts/__tests__/_fake-supabase.ts`. Real fixtures: `scripts/__te
 - **datapi smoke:** `scripts/cli/test-datapi.ts` — pulls 191 closed positions for `4C9smec…`, $8.34M lifetime volume, 30.81% win rate. ✓
 - **competition smoke:** `scripts/cli/test-competition.ts` — health ok, size-multiplier table 8 tiers, calculate(75000)=7×. ✓
 - **WS smoke:** `scripts/cli/test-ws-stream.ts` — 20 minutes total stable, programId match, idle timer never fires, 120 keepalive pings, 0 reconnects. **No `position_account` / `close_position` / `liquidate` events flowed in any window** — relay's `data: {}` pings indicate upstream "configured" but Adrena is genuinely quiet (datapi `/trader-volume` also reports 0 for the past month).
-- **Manual claim route smoke:** dev server up, POST `/api/bounties/claim` returns documented 422 ("transaction-position lookup failed — endpoint pending fix"). Validation 400s also work end-to-end. ✓
+- **Manual claim route — local dev:** POST `/api/bounties/claim` returns documented 422 ("transaction-position lookup failed — endpoint pending fix"). Validation 400s also work end-to-end. ✓
+- **Manual claim route — deployed (Vercel preview):** `adrena-bounty-hunters-git-production-fd0405-shrooms08s-projects.vercel.app` returns the exact expected 422 envelope on a real wallet + signature payload. **Phase 2 manual claim path is deployed and verified end-to-end.** ✓
+- **Migrations:** 002 + 003 applied cleanly to live Supabase. 11 columns on `recent_closes`, 5 indexes including UNIQUE on `tx_signature`. RLS enabled (the watcher uses the service role key which bypasses RLS — explicit policies are a future task).
+
+### Deployment notes (Vercel)
+
+- **Preview URLs are SSO-gated by Vercel deployment protection by default.** Had to disable protection for the smoke test. Re-enable before sharing preview URLs externally; for production-integration, decide whether to leave protection on (and have testers authenticate via Vercel SSO) or off (and rely on app-level auth).
+- **Close-watcher will NOT actually run on Vercel serverless.** `instrumentation.ts` fires at function cold-start but Vercel functions die after request idle, taking the WebSocket with them. The manual claim route works on Vercel; the auto-claim watcher needs a separate long-running Node host (Render web service, Railway, fly.io). Until then, auto-claim is unavailable in production — only the manual `POST /api/bounties/claim` path is live.
 
 ### Blocked on br0wnD3v
 
@@ -72,14 +79,16 @@ Shared mock: `scripts/__tests__/_fake-supabase.ts`. Real fixtures: `scripts/__te
 
 ### Next Session Goals
 
-1. Wait on br0wnD3v: `/transaction-position` fix + confirm relay actually streams Adrena events.
-2. Watch one real `close_position` event flow end-to-end through the watcher → audit row → claim row → `bounty.status='claimed'`. Until that receipt exists, treat the watcher as "verified-by-test, not verified-by-prod".
-3. Build `pyth-prices.ts` (Pyth Hermes polling client; SOL/BTC/BONK feed IDs; 1e6-scale conversion).
-4. Build `alpha-watcher.ts` on top of `pyth-prices.ts` + the existing `position_account` WS subscription.
-5. Begin UI work: surface claim history, hunt log, alpha leaderboard.
+1. **Pyth + alpha-watcher.** Build `src/lib/pyth-prices.ts` (Hermes polling, SOL/BTC/BONK feed IDs, 1e6-scale conversion) then `src/lib/alpha-watcher.ts` on top of `position_account` WS subscription + Pyth marks. UI flourish for "highest unrealized PnL%" panel.
+2. **Decide on watcher hosting.** Options: Render web service (free tier sleeps; aligns with Adrena's relay), Railway (cheaper persistent), fly.io (regional, more control). Pick one and stand up the close-watcher there with the same env vars as Vercel + `SUPABASE_SERVICE_ROLE_KEY`. Vercel keeps the manual claim route only.
+3. **UI integration.** Surface claim history, hunt log, alpha leaderboard. Wire the `claim` route into the existing UI (`src/components/CallYourShot.tsx`, `bounty-board.tsx`, etc — currently uncommitted UI edits will need rebase or merge).
+4. **Outstanding upstream items (still on br0wnD3v):**
+   - `/transaction-position` 400ing on every signature → manual claim route can't proceed past the documented 422.
+   - WS relay healthy but Adrena program events not flowing → watcher can't be verified live until activity resumes.
+5. **First live receipt for the watcher.** Once watcher is hosted somewhere persistent AND Adrena events are flowing, watch one real `close_position` event flow end-to-end: WS event → `recent_closes` row → claim row → `bounty.status='claimed'`. Until that receipt exists, the watcher is "verified-by-test, not verified-by-prod".
 
 ### Commits
 
 - `a87b410` — Phase 1 parser
 - `e3bdcc5` — Phase 1 PROGRESS.md
-- (this session) — Phase 2 services + claim pipeline + close-watcher + tests
+- `dc754c4` — Phase 2 services + claim pipeline + close-watcher + tests (54 passing)
