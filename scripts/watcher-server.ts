@@ -160,16 +160,23 @@ try {
   process.on("SIGTERM", () => shutdown("SIGTERM"));
   process.on("SIGINT", () => shutdown("SIGINT"));
 
+  // Crash-on-unhandled. Render's supervisor restarts the process on exit;
+  // a visible restart counter is far better than a silently-degraded
+  // watcher that appears alive but isn't processing events. Until we have
+  // alerting, fail loud is the only signal we get.
   process.on("uncaughtException", (err) => {
-    log("error", "uncaught_exception", {
+    log("fatal", "uncaught_exception", {
       error: err.message,
       stack: err.stack,
     });
+    process.exit(1);
   });
   process.on("unhandledRejection", (reason) => {
-    log("error", "unhandled_rejection", {
+    log("fatal", "unhandled_rejection", {
       reason: reason instanceof Error ? reason.message : String(reason),
+      stack: reason instanceof Error ? reason.stack : undefined,
     });
+    process.exit(1);
   });
 } catch (err) {
   log("fatal", "boot_failed", {
