@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${inter.variable} ${robotoMono.variable}`}>
-      <body className="min-h-screen bg-main text-light font-sans antialiased">
+      <body className="min-h-screen text-light font-sans antialiased">
         <Wallpaper />
         <WalletProvider>
           <Navbar />
