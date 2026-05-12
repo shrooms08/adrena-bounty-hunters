@@ -151,10 +151,15 @@ export default function ButtonsDesignPage() {
               </Button>
             </div>
           </Row>
-          <Row label="No bracket">
+          <Row label="Plain label">
             <div className="w-48">
-              <Button variant="navigate" bracketPrefix={false}>
-                Back
+              <Button variant="navigate">Back</Button>
+            </div>
+          </Row>
+          <Row label="Legacy bracket (opt-in)">
+            <div className="w-48">
+              <Button variant="navigate" action="Buy" bracketPrefix>
+                Buy ALP
               </Button>
             </div>
           </Row>

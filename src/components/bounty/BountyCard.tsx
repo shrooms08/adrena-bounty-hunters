@@ -276,7 +276,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
   };
 
   return (
-    <Card as="article" variant={cardVariant}>
+    <Card as="article" variant={cardVariant} className="flex flex-col h-full">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Pill className={TIER_CLASSES[bounty.tier]}>{bounty.tier}</Pill>
@@ -319,6 +319,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
           ))}
         </div>
       )}
+
+      <div className="flex-grow" />
 
       {bounty.state === "active" && (
         <Button variant="execute" action="Claim" onClick={handleClick}>

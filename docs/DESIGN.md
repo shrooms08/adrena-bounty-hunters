@@ -80,7 +80,7 @@ This is the brand-defining pattern. Both gradients share a chassis: `h-[2.5em] p
 
 ### Green CTA — commit/execute actions
 
-Use for `[C]laim`, `[S]take`, `[B]uy`, `[O]pen position`, `[V]erify` — anything that commits a transaction or finalizes user intent.
+Use for `Claim`, `Stake`, `Buy`, `Open position`, `Verify` — anything that commits a transaction or finalizes user intent.
 
 ```html
 class="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:opacity-90 transition duration-300 font-mono text-white rounded-md"
@@ -90,7 +90,7 @@ Uses stock Tailwind palette names. Stays mid-bright across the gradient. Hover v
 
 ### Blue CTA — navigate / secondary execute
 
-Use for `[T]rade now`, `[H]unt`, navigation actions, and secondary executes that step the user somewhere rather than committing.
+Use for `Trade now`, `Hunt`, navigation actions, and secondary executes that step the user somewhere rather than committing.
 
 ```html
 class="bg-gradient-to-r from-[#0284c7] via-[#1e40af] to-[#1a2a6a] hover:opacity-90 transition duration-300 font-mono text-white rounded-md"
@@ -116,11 +116,13 @@ Section labels are plain `<h5>` with white text and margin — no uppercase, no 
 <h5 class="text-white mt-2 mb-1">Collateral</h5>
 ```
 
-## Brand signature: bracket-prefix CTAs
+## CTA labels (plain text, no bracket prefix)
 
-Adrena prefixes primary CTAs with a bracketed first letter: `[S]take`, `[B]uy`, `[P] Open position`, `[T]rade now`. Bounty Hunters inherits this convention: `[C]laim`, `[H]unt`, `[V]erify`.
+Earlier drafts of this doc described a `[X]Word` bracket-prefix convention based on a single legacy `[B]uy` button observed in the ALP-flow component during token extraction. A direct re-check of production `adrena.trade` shows that pattern is a one-off, not a system — the deployed nav reads `Trade / Stake / Provide Liquidity / More`, the primary swap CTA reads `Swap`, and section headers read `LONG / SHORT / SWAP`. Plain labels everywhere.
 
-This is mandatory for primary CTAs. It is the single most recognizable Adrena signature after the gradient itself.
+Bounty Hunters matches the deployed app: CTAs read `Claim Bounty`, `Hunt`, `View`, `Trade now`. No brackets.
+
+The `<Button>` primitive still ships a `bracketPrefix` prop (default `false`) for the edge case where we ever need to faithfully render the legacy ALP-style button — opt-in, not opt-out.
 
 ## Numbers formatting
 
@@ -146,7 +148,7 @@ Each pattern is paired with the verified HTML structure (or a pointer to where i
 
 ```html
 <button class="w-full h-[2.5em] px-6 py-2 text-sm rounded-md font-mono text-white shadow-md hover:shadow-lg transition duration-300 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:opacity-90">
-  [C]laim bounty
+  Claim bounty
 </button>
 ```
 
@@ -154,7 +156,7 @@ Each pattern is paired with the verified HTML structure (or a pointer to where i
 
 ```html
 <button class="w-full h-[2.5em] px-6 py-2 text-sm rounded-md font-mono text-white shadow-md hover:shadow-lg transition duration-300 bg-gradient-to-r from-[#0284c7] via-[#1e40af] to-[#1a2a6a] hover:opacity-90">
-  [T]rade now
+  Trade now
 </button>
 ```
 
@@ -309,7 +311,7 @@ The single most important component. Structure:
 2. **Title** — `text-lg font-semibold text-light`.
 3. **Description** — `text-sm text-txtfade`, max 2 lines, truncate with ellipsis.
 4. **Detail rows** — label/value pairs. Label `text-txtfade text-xs`, value `font-mono text-sm text-light`. Right-align the value.
-5. **CTA** — full-width green-gradient button with bracket prefix (`[C]laim bounty`). Sits at the bottom of the card with `mt-auto` so cards in the same row have aligned CTAs even with varying description lengths.
+5. **CTA** — full-width green-gradient button with a plain label (`Claim Bounty`). Card body uses `flex flex-col h-full` with a `flex-grow` spacer above the CTA so cards in the same row have aligned CTAs even when descriptions vary in length.
 
 ### States
 
@@ -337,7 +339,7 @@ No pink anywhere. No purple. If a fourth tier is added later, raise it as an ope
 - ❌ Themed creature/monster art — marketing-mode only.
 - ❌ Custom display fonts beyond Inter + Roboto Mono.
 - ❌ Cards nested more than 2 levels deep.
-- ❌ Primary CTAs without the `[X]` bracket prefix.
+- ❌ Bracket-prefix CTAs (`[C]laim`, `[S]take`). Production `adrena.trade` uses plain labels — the bracket pattern was a misidentified one-off from a legacy ALP button.
 - ❌ Light mode or color-scheme toggle — dark-only.
 - ❌ Toast notifications for claim events — use the recent-claims feed.
 - ❌ Animated background elements (parallax, particles, gradient sweeps).
@@ -367,4 +369,5 @@ Browse the full set when a pattern in this doc feels underspecified.
 
 ## Changelog
 
-- **v0.4** (this commit) — initial `DESIGN.md` created from verified `adrena.trade` extraction. All tokens, fonts, and verified UI patterns documented. Tailwind config and `next/font` wiring landed in the same commit.
+- **v0.4** — initial `DESIGN.md` created from verified `adrena.trade` extraction. All tokens, fonts, and verified UI patterns documented. Tailwind config and `next/font` wiring landed in the same commit.
+- **v0.5** (this commit) — bracket-prefix CTA convention removed. Re-check of production `adrena.trade` showed plain labels everywhere; the `[B]uy` button that anchored the original convention was a one-off, not a system. `<Button>` retains `bracketPrefix` as an opt-in prop (default `false`). BountyCard switched to `flex flex-col h-full` with a `flex-grow` spacer so CTAs align across grid rows.

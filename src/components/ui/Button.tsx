@@ -168,7 +168,7 @@ export function Button(props: ButtonProps) {
     variant = "execute",
     size = "md",
     action,
-    bracketPrefix = true,
+    bracketPrefix = false,
     loading = false,
     fullWidth,
     className,
