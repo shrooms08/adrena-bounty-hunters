@@ -126,11 +126,16 @@ function StatCell({
   valueClassName?: string;
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-[2.75rem]">
       <span className="text-xs uppercase text-txtfade tracking-wide">
         {label}
       </span>
-      <span className={clsx("font-mono text-base text-light", valueClassName)}>
+      <span
+        className={clsx(
+          "font-mono text-base text-light whitespace-nowrap",
+          valueClassName,
+        )}
+      >
         {value}
       </span>
     </div>
@@ -146,7 +151,7 @@ function formatReward(amount: number, token: string): string {
 
 function HuntersValue({ count }: { count: number }) {
   if (count === 0) {
-    return <span className="text-txtfade">No racers</span>;
+    return <span className="text-txtfade">0 racing</span>;
   }
   return (
     <span className="text-redbright animate-pulse">
