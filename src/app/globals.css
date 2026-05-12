@@ -1,21 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 :root {
-  --background: #09090b;
-  --surface: #0f0f14;
-  --elevated: #141420;
+  --background: #0c0a1d;
+  --surface: #1a1735;
+  --elevated: #211e40;
   --border: rgba(255, 255, 255, 0.06);
-  --accent: #00d4ff;
+  --accent: #34d399;
+  --accent-muted: rgba(52, 211, 153, 0.12);
   --success: #34d399;
   --tier-common: #22c55e;
   --tier-rare: #a855f7;
   --tier-legendary: #ffd700;
-  --text-primary: #f1f5f9;
+  --text-primary: #e2e8f0;
   --text-secondary: #6b7280;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --glow-common: rgba(34, 197, 94, 0.12);
+  --glow-rare: rgba(168, 85, 247, 0.15);
+  --glow-legendary: rgba(255, 215, 0, 0.15);
 }
 
 body {
@@ -34,9 +36,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.font-mono,
 .font-heading {
-  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, "Courier New", monospace;
+}
+
+/* Reusable card panel */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
 }
 
 /* Scrollbar */
@@ -55,14 +67,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.14);
-}
-
-/* Grid background */
-.bg-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 48px 48px;
 }
 
 /* Animations */
@@ -112,12 +116,26 @@ body {
 .animate-shimmer {
   background-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.06) 50%,
-    rgba(255, 255, 255, 0.03) 100%
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Focus */
@@ -126,7 +144,30 @@ body {
   outline-offset: 2px;
 }
 
-/* Wallet adapter overrides */
+/* Wallet adapter */
 .wallet-adapter-button {
-  font-family: "Space Mono", monospace !important;
+  font-family: "Space Grotesk", system-ui, sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  height: auto !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease !important;
+}
+
+.wallet-adapter-button:hover:not([disabled]) {
+  background: var(--elevated) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.wallet-adapter-button[disabled] {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
 }
