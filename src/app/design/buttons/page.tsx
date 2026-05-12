@@ -40,7 +40,7 @@ export default function ButtonsDesignPage() {
   if (process.env.NODE_ENV === "production") notFound();
 
   return (
-    <main className="min-h-screen bg-main text-light font-sans p-8">
+    <main className="min-h-screen text-light font-sans p-8">
       <div className="max-w-5xl mx-auto flex flex-col gap-8">
         <header>
           <h1 className="text-2xl font-semibold text-white">

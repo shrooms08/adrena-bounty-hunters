@@ -147,7 +147,7 @@ export default function BountiesDesignPage() {
   const past = sampleBounties.filter((b) => b.state !== "active");
 
   return (
-    <main className="min-h-screen bg-main text-light font-sans p-8">
+    <main className="min-h-screen text-light font-sans p-8">
       <div className="max-w-6xl mx-auto flex flex-col gap-10">
         <header>
           <h1 className="text-2xl font-semibold text-white">
