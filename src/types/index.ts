@@ -1,32 +1,21 @@
-export type BountyTier = "common" | "rare" | "legendary";
+// Barrel re-export of canonical Bounty types defined in ./bounty.
+// Preserves the @/types import surface for the 23+ existing consumers.
+export type {
+  BountyTier,
+  BountyStatus,
+  BountySide,
+  TradeDirection,
+  TradingAsset,
+  BountyRow,
+  BountyView,
+  AlphaTrader,
+  TradeCallout,
+  LiveFeedItem,
+  TraderProgress,
+} from "./bounty";
+export { bountyRowToView } from "./bounty";
 
-export type BountyStatus = "active" | "claimed" | "expired";
-
-export type TradeDirection = "LONG" | "SHORT";
-
-export type TradingAsset = "SOL" | "BTC" | "BONK";
-
-export interface Bounty {
-  id: string;
-  title: string;
-  description: string;
-  asset: TradingAsset;
-  direction: TradeDirection | null;
-  min_pnl_percent: number | null;
-  max_pnl_percent: number | null;
-  min_leverage: number | null;
-  max_leverage: number | null;
-  max_duration_minutes: number | null;
-  min_position_size_usd: number;
-  tier: BountyTier;
-  reward_points: number;
-  status: BountyStatus;
-  claimed_by: string | null;
-  claimed_at: string | null;
-  claimed_trade_tx: string | null;
-  created_at: string;
-  expires_at: string;
-}
+import type { BountyTier, TradingAsset, TradeDirection } from "./bounty";
 
 export interface Claim {
   id: string;
@@ -86,21 +75,21 @@ export const TIER_CONFIG: Record<
   { color: string; glow: string; bg: string; label: string }
 > = {
   common: {
-    color: "#22c55e",
-    glow: "0 0 20px rgba(34, 197, 94, 0.3)",
-    bg: "rgba(34, 197, 94, 0.1)",
+    color: "#4ade80",
+    glow: "0 0 24px rgba(74, 222, 128, 0.2)",
+    bg: "rgba(74, 222, 128, 0.08)",
     label: "Common",
   },
   rare: {
-    color: "#a855f7",
-    glow: "0 0 20px rgba(168, 85, 247, 0.3)",
-    bg: "rgba(168, 85, 247, 0.1)",
+    color: "#c084fc",
+    glow: "0 0 24px rgba(192, 132, 252, 0.2)",
+    bg: "rgba(192, 132, 252, 0.08)",
     label: "Rare",
   },
   legendary: {
-    color: "#ffd700",
-    glow: "0 0 20px rgba(255, 215, 0, 0.3)",
-    bg: "rgba(255, 215, 0, 0.1)",
+    color: "#fbbf24",
+    glow: "0 0 24px rgba(251, 191, 36, 0.2)",
+    bg: "rgba(251, 191, 36, 0.08)",
     label: "Legendary",
   },
 };

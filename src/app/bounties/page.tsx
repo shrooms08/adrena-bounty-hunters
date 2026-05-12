@@ -8,55 +8,69 @@ import { ClaimFeed } from "@/components/ClaimFeed";
 import { StatsBar } from "@/components/stats-bar";
 import { useBounties } from "@/hooks/useBounties";
 import { alphaTrader } from "@/lib/bounty-data";
-import type { Bounty } from "@/types";
+import type { BountyRow } from "@/types";
 
 function BountyBoardSkeleton() {
   return (
-    <div className="mb-6">
-      <div className="mb-5 h-8 w-48 animate-pulse rounded-lg bg-slate-800/80" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
-        {Array.from({ length: 9 }).map((_, i) => (
+    <section className="mb-10">
+      <header className="mb-5 mt-8 flex items-end justify-between gap-4 px-4 lg:mt-10 lg:px-0">
+        <div className="space-y-2">
+          <div className="h-7 w-40 animate-shimmer rounded-md bg-[#1a1735]" />
+          <div className="h-4 w-64 max-w-full animate-shimmer rounded bg-[#1a1735]" />
+        </div>
+      </header>
+      <div className="grid grid-cols-1 gap-4 px-4 lg:px-0">
+        {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-56 animate-pulse rounded-xl bg-slate-800/80"
+            className="h-48 animate-shimmer rounded-2xl border border-white/[0.06] bg-[#1a1735]"
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
 export default function BountiesPage() {
-  const { bounties, loading } = useBounties();
-  const [selectedBounty, setSelectedBounty] = useState<Bounty | null>(null);
+  const { bounties, loading, refetch } = useBounties();
+  const [selectedBounty, setSelectedBounty] = useState<BountyRow | null>(null);
 
   const activeCount = bounties.filter((b) => b.status === "active").length;
   const claimedCount = bounties.filter((b) => b.status === "claimed").length;
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-6">
-      <AlphaHour trader={alphaTrader} />
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-[1400px] lg:px-6">
+        <AlphaHour trader={alphaTrader} />
 
-      <StatsBar activeCount={activeCount} claimedCount={claimedCount} />
+        <StatsBar activeCount={activeCount} claimedCount={claimedCount} />
 
-      <div className="flex gap-6">
-        <div className="min-w-0 flex-1">
-          {loading ? (
-            <BountyBoardSkeleton />
-          ) : (
-            <BountyBoard bounties={bounties} onSelectBounty={setSelectedBounty} />
-          )}
+        <div className="flex gap-8">
+          <div className="min-w-0 flex-1">
+            {loading ? (
+              <BountyBoardSkeleton />
+            ) : (
+              <BountyBoard
+                bounties={bounties}
+                onSelectBounty={setSelectedBounty}
+              />
+            )}
+          </div>
+          <div className="hidden w-[300px] shrink-0 pt-8 xl:block">
+            <ClaimFeed />
+          </div>
         </div>
-        <div className="hidden w-[300px] flex-shrink-0 xl:block">
-          <ClaimFeed />
-        </div>
+
+        {selectedBounty && (
+          <CallYourShot
+            key={selectedBounty.id}
+            bounty={selectedBounty}
+            isOpen={!!selectedBounty}
+            onClose={() => setSelectedBounty(null)}
+            onClaimed={refetch}
+          />
+        )}
       </div>
-
-      <CallYourShot
-        bounty={selectedBounty}
-        isOpen={selectedBounty !== null}
-        onClose={() => setSelectedBounty(null)}
-      />
     </div>
   );
 }

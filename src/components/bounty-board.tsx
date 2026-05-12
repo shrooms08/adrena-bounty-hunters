@@ -1,28 +1,45 @@
 import { BountyCard } from "@/components/bounty-card";
-import type { Bounty } from "@/types";
+import type { BountyRow } from "@/types";
 
 interface BountyBoardProps {
-  bounties: Bounty[];
-  onSelectBounty?: (bounty: Bounty) => void;
+  bounties: BountyRow[];
+  onSelectBounty?: (bounty: BountyRow) => void;
 }
 
 export function BountyBoard({ bounties, onSelectBounty }: BountyBoardProps) {
+  const activeCount = bounties.filter((b) => b.status === "active").length;
+
   return (
-    <section className="mb-6">
-      <div className="mb-5 flex items-end justify-between">
+    <section className="mb-10">
+      <header className="mb-5 mt-8 flex items-end justify-between gap-4 px-4 lg:mt-10 lg:px-0">
         <div>
-          <h2 className="font-heading text-2xl text-[var(--text-primary)]">Bounty Board</h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Live challenge cards with countdown pressure.
+          <div className="flex items-center gap-2.5">
+            <h2 className="font-heading text-2xl font-bold text-white">
+              BountyRow Board
+            </h2>
+            {activeCount > 0 && (
+              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold tabular-nums text-emerald-400">
+                {activeCount} live
+              </span>
+            )}
+          </div>
+          <p className="mt-1.5 max-w-lg text-sm text-gray-500">
+            Live challenges with countdown timers. Complete the trade on Adrena,
+            then claim with your tx signature.
           </p>
         </div>
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--accent)]">
-          first-come-first-served
+        <p className="shrink-0 text-right text-[10px] font-medium uppercase tracking-wider text-emerald-400/70">
+          First-come first-served
         </p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+      </header>
+
+      <div className="grid grid-cols-1 gap-4 px-4 lg:px-0">
         {bounties.map((bounty) => (
-          <BountyCard key={bounty.id} bounty={bounty} onSelect={onSelectBounty} />
+          <BountyCard
+            key={bounty.id}
+            bounty={bounty}
+            onSelectBounty={onSelectBounty}
+          />
         ))}
       </div>
     </section>

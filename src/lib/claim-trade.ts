@@ -8,7 +8,7 @@
 // Throws are reserved for genuine bugs — invalid args, missing dependencies.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { AdrenaTradeEvent, Bounty } from "@/types";
+import type { AdrenaTradeEvent, BountyRow } from "@/types";
 
 export type ClaimSource = "manual" | "auto";
 
@@ -18,7 +18,7 @@ export interface EvaluationResult {
 }
 
 export type Evaluator = (
-  bounty: Bounty,
+  bounty: BountyRow,
   trade: AdrenaTradeEvent,
 ) => EvaluationResult;
 
@@ -81,7 +81,7 @@ export async function claimTrade(args: ClaimTradeArgs): Promise<ClaimResult> {
     }
 
     // ---------------------------------------------------------------------
-    // 2. Bounty lookup + status checks.
+    // 2. BountyRow lookup + status checks.
     // ---------------------------------------------------------------------
     const { data: bountyRow, error: bountyErr } = await supabase
       .from("bounties")
@@ -91,7 +91,7 @@ export async function claimTrade(args: ClaimTradeArgs): Promise<ClaimResult> {
     if (bountyErr) return dbError("bounty lookup", bountyErr);
     if (!bountyRow) return { kind: "bounty_not_found", bountyId };
 
-    const bounty = bountyRow as Bounty;
+    const bounty = bountyRow as BountyRow;
     if (bounty.status !== "active") {
       return { kind: "bounty_inactive", bountyId, status: bounty.status };
     }
@@ -170,7 +170,7 @@ export async function claimTrade(args: ClaimTradeArgs): Promise<ClaimResult> {
     if (!claimedBounty) return { kind: "race_lost", bountyId };
 
     const rewardPoints = Number(
-      (claimedBounty as Bounty).reward_points ?? 0,
+      (claimedBounty as BountyRow).reward_points ?? 0,
     );
 
     // ---------------------------------------------------------------------

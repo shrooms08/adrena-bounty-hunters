@@ -4,14 +4,10 @@ import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import type {
-  Bounty,
-  BountySide,
-  BountyTier,
-} from "@/types/bounty-card";
+import type { BountySide, BountyTier, BountyView } from "@/types";
 
 interface BountyCardProps {
-  bounty: Bounty;
+  bounty: BountyView;
 }
 
 interface Countdown {
@@ -207,8 +203,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "reward",
       label: "Reward",
-      value: formatNumber(bounty.rewardAmount),
-      unit: bounty.rewardToken,
+      value: formatNumber(bounty.rewardPoints),
+      unit: "pts",
     });
   }
 

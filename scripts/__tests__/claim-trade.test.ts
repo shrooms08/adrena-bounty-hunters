@@ -11,7 +11,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import type { AdrenaTradeEvent, Bounty } from "@/types";
+import type { AdrenaTradeEvent, BountyRow } from "@/types";
 
 import { claimTrade, type Evaluator } from "@/lib/claim-trade";
 import { FakeSupabase, asSupabase } from "./_fake-supabase";
@@ -22,7 +22,7 @@ import { FakeSupabase, asSupabase } from "./_fake-supabase";
 
 const WALLET = "BEG3gUbuzgfc8gAoKx3rN1U2bv9EWkseo99QU3w8322A";
 
-function makeBounty(overrides: Partial<Bounty> = {}): Bounty {
+function makeBounty(overrides: Partial<BountyRow> = {}): BountyRow {
   return {
     id: "bounty-1",
     title: "Test bounty",
@@ -287,7 +287,7 @@ test("evaluator fail: bounty conditions not met → kind='evaluator_rejected' wi
   assert.ok(result.kind === "evaluator_rejected");
   assert.deepEqual(result.reasons, ["PnL too low: 5% < min 10%"]);
 
-  // Bounty must remain active when evaluator rejects.
+  // BountyRow must remain active when evaluator rejects.
   assert.equal(fake.bounties.get("bounty-1")?.status, "active");
   assert.equal(fake.claims.length, 0);
 });

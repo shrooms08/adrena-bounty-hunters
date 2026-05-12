@@ -18,7 +18,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { AdrenaTradeEvent, Bounty } from "@/types";
+import type { AdrenaTradeEvent, BountyRow } from "@/types";
 import {
   claimTrade,
   type ClaimResult,
@@ -201,7 +201,7 @@ export async function handleEvent(
 async function findMatchingBounties(
   deps: CloseWatcherDeps,
   trade: AdrenaTradeEvent,
-): Promise<Bounty[]> {
+): Promise<BountyRow[]> {
   const now = (deps.now ?? (() => new Date()))();
   const nowIso = now.toISOString();
   const { data, error } = await deps.supabase
@@ -214,11 +214,11 @@ async function findMatchingBounties(
   if (error) {
     throw new Error(`bounties lookup failed: ${errorMessage(error)}`);
   }
-  return (data ?? []) as Bounty[];
+  return (data ?? []) as BountyRow[];
 }
 
 async function tryClaimAcrossBounties(
-  bounties: Bounty[],
+  bounties: BountyRow[],
   wallet: string,
   trade: AdrenaTradeEvent,
   deps: CloseWatcherDeps,

@@ -16,7 +16,7 @@ import { resolve } from "node:path";
 
 import type { AdrenaWsClient, WsClosePositionEvent, WsLiquidateEvent } from "@/lib/adrena-ws";
 import { parseApiPosition, type ApiPosition } from "@/lib/adrena-datapi";
-import type { Bounty } from "@/types";
+import type { BountyRow } from "@/types";
 import type { Evaluator } from "@/lib/claim-trade";
 import {
   handleEvent,
@@ -52,7 +52,7 @@ function loadWsClose(): WsClosePositionEvent {
   ) as WsClosePositionEvent;
 }
 
-function makeBounty(overrides: Partial<Bounty> = {}): Bounty {
+function makeBounty(overrides: Partial<BountyRow> = {}): BountyRow {
   return {
     id: `bounty-${Math.random().toString(36).slice(2, 8)}`,
     title: "test",
@@ -90,7 +90,7 @@ const FAIL_EVALUATOR: Evaluator = () => ({
 interface BuildOpts {
   position?: ApiPosition | null;
   evaluator?: Evaluator;
-  bounties?: Bounty[];
+  bounties?: BountyRow[];
 }
 
 function buildDeps(opts: BuildOpts = {}): {

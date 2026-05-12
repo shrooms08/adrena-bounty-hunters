@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { BountyCard } from "@/components/bounty/BountyCard";
-import type { Bounty } from "@/types/bounty-card";
+import type { BountyView } from "@/types";
 
 export const metadata = {
   title: "Design / Bounties",
@@ -12,7 +12,7 @@ export const metadata = {
 // will not need this.
 export const dynamic = "force-dynamic";
 
-function buildSampleBounties(): Bounty[] {
+function buildSampleBounties(): BountyView[] {
   const now = Date.now();
   const iso = (offsetMs: number) => new Date(now + offsetMs).toISOString();
   return [
@@ -28,8 +28,7 @@ function buildSampleBounties(): Bounty[] {
     minPnlPercent: 10,
     minCollateralUsd: 500,
     maxDurationMinutes: 60,
-    rewardAmount: 2500,
-    rewardToken: "ADX",
+    rewardPoints: 2500,
     expiresAt: iso(23 * 60 * 60 * 1000 + 14 * 60 * 1000),
     createdAt: iso(-2 * 60 * 60 * 1000),
     state: "active",
@@ -43,8 +42,7 @@ function buildSampleBounties(): Bounty[] {
     asset: "BTC",
     side: "short",
     minPnlPercent: 0.1,
-    rewardAmount: 500,
-    rewardToken: "ADX",
+    rewardPoints: 500,
     expiresAt: iso(5 * 60 * 60 * 1000 + 12 * 60 * 1000),
     createdAt: iso(-30 * 60 * 1000),
     state: "active",
@@ -55,13 +53,12 @@ function buildSampleBounties(): Bounty[] {
     tier: "common",
     title: "Survive 100x for 5 minutes",
     description:
-      "Open any direction on JITO at 100x leverage and hold the position for at least 5 minutes without liquidation.",
-    asset: "JITO",
-    side: "long",
+      "Open any direction on BONK at 100x leverage and hold the position for at least 5 minutes without liquidation.",
+    asset: "BONK",
+    side: "any",
     minLeverage: 100,
     minCollateralUsd: 50,
-    rewardAmount: 100,
-    rewardToken: "USDC",
+    rewardPoints: 100,
     expiresAt: iso(8 * 60 * 60 * 1000),
     createdAt: iso(-15 * 60 * 1000),
     state: "active",
@@ -76,8 +73,7 @@ function buildSampleBounties(): Bounty[] {
     asset: "BONK",
     side: "any",
     minPnlPercent: 0.1,
-    rewardAmount: 250,
-    rewardToken: "ADX",
+    rewardPoints: 250,
     expiresAt: iso(30 * 1000),
     createdAt: iso(-10 * 60 * 1000),
     state: "active",
@@ -92,8 +88,7 @@ function buildSampleBounties(): Bounty[] {
     asset: "SOL",
     side: "any",
     minCollateralUsd: 100,
-    rewardAmount: 75,
-    rewardToken: "USDC",
+    rewardPoints: 75,
     expiresAt: iso(28 * 60 * 60 * 1000),
     createdAt: iso(-1 * 60 * 60 * 1000),
     state: "active",
@@ -111,8 +106,7 @@ function buildSampleBounties(): Bounty[] {
     minPnlPercent: 5,
     minCollateralUsd: 100,
     maxDurationMinutes: 1440,
-    rewardAmount: 1000,
-    rewardToken: "ADX",
+    rewardPoints: 1000,
     expiresAt: iso(20 * 60 * 60 * 1000),
     createdAt: iso(-6 * 60 * 60 * 1000),
     state: "claimed",
@@ -129,8 +123,7 @@ function buildSampleBounties(): Bounty[] {
     asset: "BTC",
     side: "short",
     minPnlPercent: 2,
-    rewardAmount: 400,
-    rewardToken: "ADX",
+    rewardPoints: 400,
     expiresAt: iso(-2 * 60 * 60 * 1000),
     createdAt: iso(-12 * 60 * 60 * 1000),
     state: "expired",

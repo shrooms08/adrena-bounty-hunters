@@ -1,4 +1,4 @@
-import type { AdrenaTradeEvent, Bounty } from "@/types";
+import type { AdrenaTradeEvent, BountyRow } from "@/types";
 
 interface EvaluationResult {
   matches: boolean;
@@ -9,7 +9,7 @@ const toMs = (timestamp: number): number =>
   timestamp < 1_000_000_000_000 ? timestamp * 1000 : timestamp;
 
 export function evaluateTrade(
-  bounty: Bounty,
+  bounty: BountyRow,
   trade: AdrenaTradeEvent,
 ): EvaluationResult {
   const reasons: string[] = [];
@@ -27,7 +27,7 @@ export function evaluateTrade(
   if (expiresAtMs > nowMs) {
     reasons.push("✓ Not expired");
   } else {
-    reasons.push("Bounty expired");
+    reasons.push("BountyRow expired");
     matches = false;
   }
 
@@ -122,9 +122,9 @@ export function evaluateTrade(
 }
 
 export function findMatchingBounties(
-  bounties: Bounty[],
+  bounties: BountyRow[],
   trade: AdrenaTradeEvent,
-): Bounty[] {
+): BountyRow[] {
   return bounties
     .filter((bounty) => evaluateTrade(bounty, trade).matches)
     .sort((a, b) => b.reward_points - a.reward_points);

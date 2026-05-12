@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { readFileSync } from "node:fs";
 import { Connection } from "@solana/web3.js";
-import type { Bounty } from "@/types";
+import type { BountyRow } from "@/types";
 import { evaluateTrade } from "@/lib/bounty-evaluator";
 import { fetchTxEvents, findOpenForCloseEvent } from "../parsers/tx-parser";
 import { composeTradeEvent } from "../parsers/trade-composer";
@@ -54,7 +54,7 @@ function fail(msg: string): never {
   process.exit(1);
 }
 
-function loadBounty(path: string): Bounty {
+function loadBounty(path: string): BountyRow {
   let raw: string;
   try {
     raw = readFileSync(path, "utf8");
@@ -64,7 +64,7 @@ function loadBounty(path: string): Bounty {
     );
   }
   try {
-    return JSON.parse(raw) as Bounty;
+    return JSON.parse(raw) as BountyRow;
   } catch (err) {
     fail(
       `bounty file is not valid JSON: ${err instanceof Error ? err.message : String(err)}`,

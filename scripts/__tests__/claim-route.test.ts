@@ -13,7 +13,7 @@ import type {
   ApiPosition,
   ApiTransactionPosition,
 } from "@/lib/adrena-datapi";
-import type { Bounty } from "@/types";
+import type { BountyRow } from "@/types";
 
 import {
   handleClaim,
@@ -39,7 +39,7 @@ function makeRequest(body: unknown): Request {
   });
 }
 
-function makeBounty(overrides: Partial<Bounty> = {}): Bounty {
+function makeBounty(overrides: Partial<BountyRow> = {}): BountyRow {
   return {
     id: BOUNTY_ID,
     title: "Test bounty",
@@ -142,7 +142,7 @@ interface Scenario {
   evaluator?: Evaluator;
   txPos?: ApiTransactionPosition | "throw" | "null-wallet";
   position?: ApiPosition | null | "throw";
-  seedBounty?: Bounty | null;
+  seedBounty?: BountyRow | null;
   preSeedClaim?: { signature: string; bountyId?: string };
   raceMutate?: boolean;
 }
