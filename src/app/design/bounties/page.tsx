@@ -7,10 +7,15 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-const now = Date.now();
-const iso = (offsetMs: number) => new Date(now + offsetMs).toISOString();
+// Smoke test only — needs render-time `Date.now()` so the <1-minute
+// countdown demo stays live on every page load. Production /bounties
+// will not need this.
+export const dynamic = "force-dynamic";
 
-const SAMPLE_BOUNTIES: Bounty[] = [
+function buildSampleBounties(): Bounty[] {
+  const now = Date.now();
+  const iso = (offsetMs: number) => new Date(now + offsetMs).toISOString();
+  return [
   {
     id: "b-legendary-full",
     tier: "legendary",
@@ -73,7 +78,7 @@ const SAMPLE_BOUNTIES: Bounty[] = [
     minPnlPercent: 0.1,
     rewardAmount: 250,
     rewardToken: "ADX",
-    expiresAt: iso(47 * 1000),
+    expiresAt: iso(30 * 1000),
     createdAt: iso(-10 * 60 * 1000),
     state: "active",
     activeHuntersCount: 7,
@@ -131,13 +136,15 @@ const SAMPLE_BOUNTIES: Bounty[] = [
     state: "expired",
     activeHuntersCount: 0,
   },
-];
+  ];
+}
 
 export default function BountiesDesignPage() {
   if (process.env.NODE_ENV === "production") notFound();
 
-  const active = SAMPLE_BOUNTIES.filter((b) => b.state === "active");
-  const past = SAMPLE_BOUNTIES.filter((b) => b.state !== "active");
+  const sampleBounties = buildSampleBounties();
+  const active = sampleBounties.filter((b) => b.state === "active");
+  const past = sampleBounties.filter((b) => b.state !== "active");
 
   return (
     <main className="min-h-screen bg-main text-light font-sans p-8">

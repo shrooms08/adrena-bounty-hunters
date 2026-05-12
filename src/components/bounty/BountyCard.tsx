@@ -119,14 +119,16 @@ function Pill({
 function StatCell({
   label,
   value,
+  unit,
   valueClassName,
 }: {
   label: string;
   value: React.ReactNode;
+  unit?: string;
   valueClassName?: string;
 }) {
   return (
-    <div className="flex flex-col min-h-[2.75rem]">
+    <div className="flex flex-col min-h-[2.75rem] min-w-0">
       <span className="text-xs uppercase text-txtfade tracking-wide">
         {label}
       </span>
@@ -137,16 +139,16 @@ function StatCell({
         )}
       >
         {value}
+        {unit && (
+          <span className="text-xs opacity-70 ml-1">{unit}</span>
+        )}
       </span>
     </div>
   );
 }
 
-function formatReward(amount: number, token: string): string {
-  const formatted = amount.toLocaleString("en-US", {
-    maximumFractionDigits: 2,
-  });
-  return `${formatted} ${token}`;
+function formatNumber(amount: number): string {
+  return amount.toLocaleString("en-US", { maximumFractionDigits: 2 });
 }
 
 function HuntersValue({ count }: { count: number }) {
@@ -188,8 +190,12 @@ export function BountyCard({ bounty }: BountyCardProps) {
   const cardVariant =
     isClaimed || isExpired ? ("disabled" as const) : ("default" as const);
 
-  const stats: Array<{ label: string; value: React.ReactNode; key: string }> =
-    [];
+  const stats: Array<{
+    label: string;
+    value: React.ReactNode;
+    unit?: string;
+    key: string;
+  }> = [];
 
   if (isClaimed && bounty.claimedAt) {
     stats.push({
@@ -201,7 +207,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "reward",
       label: "Reward",
-      value: formatReward(bounty.rewardAmount, bounty.rewardToken),
+      value: formatNumber(bounty.rewardAmount),
+      unit: bounty.rewardToken,
     });
   }
 
@@ -209,7 +216,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "minColl",
       label: "Min Coll",
-      value: `$${bounty.minCollateralUsd.toLocaleString("en-US")}`,
+      value: `$${formatNumber(bounty.minCollateralUsd)}`,
     });
   }
 
@@ -217,7 +224,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "minLev",
       label: "Min Lev",
-      value: `${bounty.minLeverage}x`,
+      value: `${bounty.minLeverage}`,
+      unit: "x",
     });
   }
 
@@ -225,7 +233,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "minPnl",
       label: "Min PnL",
-      value: `${bounty.minPnlPercent}%`,
+      value: `${bounty.minPnlPercent}`,
+      unit: "%",
     });
   }
 
@@ -233,7 +242,8 @@ export function BountyCard({ bounty }: BountyCardProps) {
     stats.push({
       key: "maxDur",
       label: "Max Dur",
-      value: `${bounty.maxDurationMinutes}m`,
+      value: `${bounty.maxDurationMinutes}`,
+      unit: "min",
     });
   }
 
@@ -300,7 +310,12 @@ export function BountyCard({ bounty }: BountyCardProps) {
           }}
         >
           {visibleStats.map((s) => (
-            <StatCell key={s.key} label={s.label} value={s.value} />
+            <StatCell
+              key={s.key}
+              label={s.label}
+              value={s.value}
+              unit={s.unit}
+            />
           ))}
         </div>
       )}
