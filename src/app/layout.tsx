@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { WalletProvider } from "@/components/WalletProvider";
+import { Wallpaper } from "@/components/layout/Wallpaper";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${inter.variable} ${robotoMono.variable}`}>
       <body className="min-h-screen bg-main text-light font-sans antialiased">
+        <Wallpaper />
         <WalletProvider>
           <Navbar />
           {children}
