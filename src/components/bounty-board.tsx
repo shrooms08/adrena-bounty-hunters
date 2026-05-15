@@ -1,4 +1,7 @@
+"use client";
+
 import { BountyCard } from "@/components/bounty/BountyCard";
+import { useEligibleBounties } from "@/hooks/useEligibleBounties";
 import { bountyRowToView } from "@/types";
 import type { BountyRow, BountyView } from "@/types";
 
@@ -8,6 +11,7 @@ interface BountyBoardProps {
 }
 
 export function BountyBoard({ bounties, onClaim }: BountyBoardProps) {
+  const { eligibleBountyIds } = useEligibleBounties();
   const activeCount = bounties.filter((b) => b.status === "active").length;
 
   return (
@@ -40,6 +44,7 @@ export function BountyBoard({ bounties, onClaim }: BountyBoardProps) {
             key={row.id}
             bounty={bountyRowToView(row)}
             onClaim={onClaim}
+            qualifies={eligibleBountyIds.has(row.id)}
           />
         ))}
       </div>

@@ -12,6 +12,12 @@ export const metadata = {
 // will not need this.
 export const dynamic = "force-dynamic";
 
+// Smoke-only: hardcoded "qualifying" bounties so the [You qualify] pill is
+// visible in design-review screenshots. The real production page derives this
+// from /api/bounties/eligible. One common + one legendary so reviewers see
+// the pill against both muted and bright tier backgrounds.
+const QUALIFIES_DEMO = new Set(["b-common-no-hunters", "b-legendary-full"]);
+
 function buildSampleBounties(): BountyView[] {
   const now = Date.now();
   const iso = (offsetMs: number) => new Date(now + offsetMs).toISOString();
@@ -160,7 +166,11 @@ export default function BountiesDesignPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {active.map((b) => (
-              <BountyCard key={b.id} bounty={b} />
+              <BountyCard
+                key={b.id}
+                bounty={b}
+                qualifies={QUALIFIES_DEMO.has(b.id)}
+              />
             ))}
           </div>
         </section>

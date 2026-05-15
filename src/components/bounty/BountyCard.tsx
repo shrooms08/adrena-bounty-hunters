@@ -11,6 +11,7 @@ import type { BountySide, BountyTier, BountyView } from "@/types";
 interface BountyCardProps {
   bounty: BountyView;
   onClaim?: (bounty: BountyView) => void;
+  qualifies?: boolean;
 }
 
 interface Countdown {
@@ -183,7 +184,7 @@ function CountdownLabel({ targetIso }: { targetIso: string }) {
   );
 }
 
-export function BountyCard({ bounty, onClaim }: BountyCardProps) {
+export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
   const { publicKey } = useWallet();
   const { setVisible: setWalletModalVisible } = useWalletModal();
   const isWalletConnected = publicKey !== null;
@@ -286,6 +287,11 @@ export function BountyCard({ bounty, onClaim }: BountyCardProps) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Pill className={TIER_CLASSES[bounty.tier]}>{bounty.tier}</Pill>
+          {qualifies && (
+            <Pill className="bg-green-500/15 text-green-500 font-bold">
+              You qualify
+            </Pill>
+          )}
           <Pill className="bg-light/10 text-light">{bounty.asset}</Pill>
           <span className="text-txtfade text-xs">·</span>
           <Pill className={SIDE_CLASSES[bounty.side]}>{bounty.side}</Pill>
