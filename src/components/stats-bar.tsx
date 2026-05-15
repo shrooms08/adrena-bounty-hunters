@@ -1,60 +1,68 @@
+import { Target, CheckCircle2, TrendingUp, Users } from "lucide-react";
+
 interface StatsBarProps {
   activeCount: number;
   claimedCount: number;
 }
 
-const STATS_CONFIG = [
-  { key: "active", label: "Active Bounties", color: "#00d4ff" },
-  { key: "claimed", label: "Claimed", color: "#34d399" },
-  { key: "leverage", label: "Avg Leverage", color: "#f1f5f9" },
-  { key: "hunters", label: "Hunters Online", color: "#fbbf24" },
-] as const;
-
 export function StatsBar({ activeCount, claimedCount }: StatsBarProps) {
-  const values: Record<string, string> = {
-    active: String(activeCount),
-    claimed: String(claimedCount),
-    leverage: "27x",
-    hunters: "312",
-  };
+  const stats = [
+    {
+      label: "Active bounties",
+      value: String(activeCount),
+      color: "text-emerald-400",
+      icon: <Target className="h-5 w-5 text-gray-500" />,
+    },
+    {
+      label: "Claimed",
+      value: String(claimedCount),
+      color: "text-emerald-400",
+      icon: <CheckCircle2 className="h-5 w-5 text-gray-500" />,
+    },
+    {
+      label: "Avg leverage",
+      value: "27×",
+      color: "text-white",
+      icon: <TrendingUp className="h-5 w-5 text-gray-500" />,
+    },
+    {
+      label: "Hunters online",
+      value: "312",
+      color: "text-white",
+      icon: <Users className="h-5 w-5 text-gray-500" />,
+    },
+  ] as const;
 
   return (
-    <section
-      className="mb-8"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "16px",
-      }}
-    >
-      {STATS_CONFIG.map((stat) => (
-        <article
-          key={stat.key}
-          className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-[#0f0f14] p-4"
-        >
-          <div
-            className="absolute inset-y-0 left-0 w-[3px]"
-            style={{ backgroundColor: stat.color }}
-          />
-          <p className="mb-1 font-mono text-[11px] uppercase tracking-wider text-slate-500">
-            {stat.label}
-          </p>
-          <div className="flex items-center gap-2">
-            <p
-              className="font-mono text-2xl font-bold"
-              style={{ color: stat.color }}
-            >
-              {values[stat.key]}
+    <div className="mx-4 mt-4 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1a1735] lg:mx-0">
+      <div className="grid grid-cols-2 divide-x divide-white/[0.06]">
+        {/* Top row */}
+        {stats.slice(0, 2).map((stat) => (
+          <div key={stat.label} className="flex flex-col items-center px-6 py-5 text-center">
+            {stat.icon}
+            <p className="mt-2 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              {stat.label}
             </p>
-            {stat.key === "active" && (
-              <span
-                className="inline-block h-2 w-2 animate-pulse rounded-full"
-                style={{ backgroundColor: stat.color }}
-              />
-            )}
+            <p className={`mt-1 tabular-nums font-heading text-2xl font-bold ${stat.color}`}>
+              {stat.value}
+            </p>
           </div>
-        </article>
-      ))}
-    </section>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 divide-x divide-white/[0.06] border-t border-white/[0.06]">
+        {/* Bottom row */}
+        {stats.slice(2).map((stat) => (
+          <div key={stat.label} className="flex flex-col items-center px-6 py-5 text-center">
+            {stat.icon}
+            <p className="mt-2 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              {stat.label}
+            </p>
+            <p className={`mt-1 tabular-nums font-heading text-2xl font-bold ${stat.color}`}>
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

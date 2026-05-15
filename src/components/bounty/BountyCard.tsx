@@ -2,12 +2,15 @@
 
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { BountySide, BountyTier, BountyView } from "@/types";
 
 interface BountyCardProps {
   bounty: BountyView;
+  onClaim?: (bounty: BountyView) => void;
 }
 
 interface Countdown {
@@ -180,7 +183,10 @@ function CountdownLabel({ targetIso }: { targetIso: string }) {
   );
 }
 
-export function BountyCard({ bounty }: BountyCardProps) {
+export function BountyCard({ bounty, onClaim }: BountyCardProps) {
+  const { publicKey } = useWallet();
+  const { setVisible: setWalletModalVisible } = useWalletModal();
+  const isWalletConnected = publicKey !== null;
   const isClaimed = bounty.state === "claimed";
   const isExpired = bounty.state === "expired";
   const cardVariant =
@@ -263,12 +269,16 @@ export function BountyCard({ bounty }: BountyCardProps) {
 
   const visibleStats = stats.slice(0, 4);
 
-  const handleClick = () => {
-    if (isClaimed) {
-      console.log("[BountyCard] view claimer for", bounty.id);
-    } else {
-      console.log("[BountyCard] claim", bounty.id);
+  const handleClaim = () => {
+    if (!isWalletConnected) {
+      setWalletModalVisible(true);
+      return;
     }
+    onClaim?.(bounty);
+  };
+
+  const handleViewClaimer = () => {
+    console.log("[BountyCard] view claimer for", bounty.id);
   };
 
   return (
@@ -319,12 +329,12 @@ export function BountyCard({ bounty }: BountyCardProps) {
       <div className="flex-grow" />
 
       {bounty.state === "active" && (
-        <Button variant="execute" action="Claim" onClick={handleClick}>
-          Claim Bounty
+        <Button variant="execute" fullWidth onClick={handleClaim}>
+          {isWalletConnected ? "Claim Bounty" : "Connect Wallet"}
         </Button>
       )}
       {bounty.state === "claimed" && (
-        <Button variant="outline" action="View" fullWidth onClick={handleClick}>
+        <Button variant="outline" fullWidth onClick={handleViewClaimer}>
           View claimer
         </Button>
       )}

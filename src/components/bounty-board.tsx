@@ -1,12 +1,13 @@
-import { BountyCard } from "@/components/bounty-card";
-import type { BountyRow } from "@/types";
+import { BountyCard } from "@/components/bounty/BountyCard";
+import { bountyRowToView } from "@/types";
+import type { BountyRow, BountyView } from "@/types";
 
 interface BountyBoardProps {
   bounties: BountyRow[];
-  onSelectBounty?: (bounty: BountyRow) => void;
+  onClaim?: (bounty: BountyView) => void;
 }
 
-export function BountyBoard({ bounties, onSelectBounty }: BountyBoardProps) {
+export function BountyBoard({ bounties, onClaim }: BountyBoardProps) {
   const activeCount = bounties.filter((b) => b.status === "active").length;
 
   return (
@@ -15,7 +16,7 @@ export function BountyBoard({ bounties, onSelectBounty }: BountyBoardProps) {
         <div>
           <div className="flex items-center gap-2.5">
             <h2 className="font-heading text-2xl font-bold text-white">
-              BountyRow Board
+              Bounty Board
             </h2>
             {activeCount > 0 && (
               <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold tabular-nums text-emerald-400">
@@ -33,12 +34,12 @@ export function BountyBoard({ bounties, onSelectBounty }: BountyBoardProps) {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-4 px-4 lg:px-0">
-        {bounties.map((bounty) => (
+      <div className="grid grid-cols-1 gap-4 px-4 lg:px-0 md:grid-cols-2 lg:grid-cols-3">
+        {bounties.map((row) => (
           <BountyCard
-            key={bounty.id}
-            bounty={bounty}
-            onSelectBounty={onSelectBounty}
+            key={row.id}
+            bounty={bountyRowToView(row)}
+            onClaim={onClaim}
           />
         ))}
       </div>

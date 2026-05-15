@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback } from "react";
 import { AlphaHour } from "@/components/alpha-hour";
 import { BountyBoard } from "@/components/bounty-board";
-import { CallYourShot } from "@/components/CallYourShot";
 import { ClaimFeed } from "@/components/ClaimFeed";
 import { StatsBar } from "@/components/stats-bar";
 import { useBounties } from "@/hooks/useBounties";
 import { alphaTrader } from "@/lib/bounty-data";
-import type { BountyRow } from "@/types";
+import type { BountyView } from "@/types";
 
 function BountyBoardSkeleton() {
   return (
@@ -32,11 +31,15 @@ function BountyBoardSkeleton() {
 }
 
 export default function BountiesPage() {
-  const { bounties, loading, refetch } = useBounties();
-  const [selectedBounty, setSelectedBounty] = useState<BountyRow | null>(null);
+  const { bounties, loading } = useBounties();
 
   const activeCount = bounties.filter((b) => b.status === "active").length;
   const claimedCount = bounties.filter((b) => b.status === "claimed").length;
+
+  const handleClaim = useCallback((bounty: BountyView) => {
+    // TODO: wire to /api/bounties/claim once BountyCard v1 lands the full flow.
+    console.log("Claim triggered for bounty:", bounty.id);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -50,26 +53,13 @@ export default function BountiesPage() {
             {loading ? (
               <BountyBoardSkeleton />
             ) : (
-              <BountyBoard
-                bounties={bounties}
-                onSelectBounty={setSelectedBounty}
-              />
+              <BountyBoard bounties={bounties} onClaim={handleClaim} />
             )}
           </div>
           <div className="hidden w-[300px] shrink-0 pt-8 xl:block">
             <ClaimFeed />
           </div>
         </div>
-
-        {selectedBounty && (
-          <CallYourShot
-            key={selectedBounty.id}
-            bounty={selectedBounty}
-            isOpen={!!selectedBounty}
-            onClose={() => setSelectedBounty(null)}
-            onClaimed={refetch}
-          />
-        )}
       </div>
     </div>
   );
