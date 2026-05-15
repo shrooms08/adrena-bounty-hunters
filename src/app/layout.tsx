@@ -40,6 +40,8 @@ export default function RootLayout({
         <Toaster
           position="bottom-right"
           theme="dark"
+          richColors
+          closeButton
           toastOptions={{
             className: "font-sans",
             style: {

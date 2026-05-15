@@ -78,7 +78,7 @@ export default function BountiesPage() {
         }
 
         toast.success(`Claimed: ${bounty.title}`, {
-          description: `+${bounty.rewardPoints} pts · ${claimDetails.pnlPercent.toFixed(1)}% PnL`,
+          description: `+${bounty.rewardPoints} mutagen · ${claimDetails.pnlPercent.toFixed(1)}% PnL`,
         });
 
         refetchBounties();

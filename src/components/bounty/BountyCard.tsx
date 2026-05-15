@@ -222,7 +222,7 @@ export function BountyCard({
       key: "reward",
       label: "Reward",
       value: formatNumber(bounty.rewardPoints),
-      unit: "pts",
+      unit: "mutagen",
     });
   }
 

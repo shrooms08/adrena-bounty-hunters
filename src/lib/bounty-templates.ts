@@ -45,7 +45,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 120,
-    reward_points: 50,
+    reward_points: 0.2,
   },
   {
     id: "c-sol-momentum-long",
@@ -63,7 +63,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 50,
     ttl_minutes: 180,
-    reward_points: 75,
+    reward_points: 0.25,
   },
   {
     id: "c-sol-short-snipe",
@@ -81,7 +81,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 120,
-    reward_points: 70,
+    reward_points: 0.25,
   },
   {
     id: "c-sol-hold",
@@ -99,7 +99,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 50,
     ttl_minutes: 240,
-    reward_points: 90,
+    reward_points: 0.3,
   },
   {
     id: "c-sol-any-way",
@@ -117,7 +117,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: null,
     min_position_size_usd: 50,
     ttl_minutes: 180,
-    reward_points: 30,
+    reward_points: 0.1,
   },
   {
     id: "c-btc-scalp",
@@ -135,7 +135,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 15,
     min_position_size_usd: 50,
     ttl_minutes: 60,
-    reward_points: 60,
+    reward_points: 0.25,
   },
   {
     id: "c-btc-steady-long",
@@ -153,7 +153,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 50,
     ttl_minutes: 180,
-    reward_points: 80,
+    reward_points: 0.25,
   },
   {
     id: "c-btc-short-squeeze",
@@ -171,7 +171,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 120,
-    reward_points: 75,
+    reward_points: 0.25,
   },
   {
     id: "c-btc-3x-grind",
@@ -189,7 +189,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 100,
     ttl_minutes: 240,
-    reward_points: 100,
+    reward_points: 0.4,
   },
   {
     id: "c-btc-any-way",
@@ -207,7 +207,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: null,
     min_position_size_usd: 50,
     ttl_minutes: 180,
-    reward_points: 30,
+    reward_points: 0.1,
   },
   {
     id: "c-bonk-fade",
@@ -225,7 +225,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 15,
     min_position_size_usd: 50,
     ttl_minutes: 60,
-    reward_points: 50,
+    reward_points: 0.2,
   },
   {
     id: "c-bonk-degen-long",
@@ -243,7 +243,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 120,
-    reward_points: 80,
+    reward_points: 0.3,
   },
   {
     id: "c-bonk-volatility-ride",
@@ -261,7 +261,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 90,
-    reward_points: 60,
+    reward_points: 0.25,
   },
   {
     id: "c-bonk-any-way",
@@ -279,7 +279,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: null,
     min_position_size_usd: 50,
     ttl_minutes: 180,
-    reward_points: 25,
+    reward_points: 0.1,
   },
   {
     id: "c-sol-2x-basics",
@@ -297,7 +297,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 50,
     ttl_minutes: 120,
-    reward_points: 60,
+    reward_points: 0.2,
   },
 
   // ─────────────────── Rare (weight 4 each) ───────────────────
@@ -317,7 +317,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 200,
     ttl_minutes: 360,
-    reward_points: 250,
+    reward_points: 1.0,
   },
   {
     id: "r-btc-mid-strike",
@@ -335,7 +335,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 200,
     ttl_minutes: 480,
-    reward_points: 350,
+    reward_points: 1.5,
   },
   {
     id: "r-bonk-volatility-hunter",
@@ -353,7 +353,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 100,
     ttl_minutes: 240,
-    reward_points: 400,
+    reward_points: 1.5,
   },
   {
     id: "r-sol-short-squeeze",
@@ -371,7 +371,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 200,
     ttl_minutes: 360,
-    reward_points: 300,
+    reward_points: 1.2,
   },
   {
     id: "r-btc-scalp-precision",
@@ -389,7 +389,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 200,
     ttl_minutes: 360,
-    reward_points: 350,
+    reward_points: 1.5,
   },
   {
     id: "r-sol-high-conviction",
@@ -407,7 +407,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 120,
     min_position_size_usd: 250,
     ttl_minutes: 480,
-    reward_points: 450,
+    reward_points: 1.8,
   },
   {
     id: "r-btc-sniper",
@@ -425,7 +425,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 250,
     ttl_minutes: 480,
-    reward_points: 400,
+    reward_points: 1.5,
   },
   {
     id: "r-bonk-breakout",
@@ -443,7 +443,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 100,
     ttl_minutes: 360,
-    reward_points: 500,
+    reward_points: 2.0,
   },
   {
     id: "r-sol-ladder",
@@ -461,7 +461,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 120,
     min_position_size_usd: 150,
     ttl_minutes: 480,
-    reward_points: 250,
+    reward_points: 1.0,
   },
   {
     id: "r-btc-reversal",
@@ -479,7 +479,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 200,
     ttl_minutes: 360,
-    reward_points: 300,
+    reward_points: 1.2,
   },
 
   // ─────────────────── Legendary (weight 1 each) ───────────────────
@@ -499,7 +499,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 500,
     ttl_minutes: 720,
-    reward_points: 2000,
+    reward_points: 8,
   },
   {
     id: "l-btc-degen-50x",
@@ -517,7 +517,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 500,
     ttl_minutes: 1440,
-    reward_points: 2500,
+    reward_points: 10,
   },
   {
     id: "l-bonk-lottery",
@@ -535,7 +535,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 30,
     min_position_size_usd: 200,
     ttl_minutes: 720,
-    reward_points: 1500,
+    reward_points: 5,
   },
   {
     id: "l-sol-hyper",
@@ -553,7 +553,7 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 60,
     min_position_size_usd: 500,
     ttl_minutes: 1440,
-    reward_points: 2500,
+    reward_points: 7,
   },
   {
     id: "l-btc-titan",
@@ -571,6 +571,6 @@ export const BOUNTY_TEMPLATES: BountyTemplate[] = [
     max_duration_minutes: 120,
     min_position_size_usd: 500,
     ttl_minutes: 1440,
-    reward_points: 2200,
+    reward_points: 7,
   },
 ];

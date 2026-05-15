@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { BountyCard } from "@/components/bounty/BountyCard";
+import { SmokeBountyBoard } from "./SmokeBountyBoard";
 import type { BountyView } from "@/types";
 
 export const metadata = {
@@ -43,7 +43,7 @@ function buildSampleBounties(): BountyView[] {
     minPnlPercent: 10,
     minCollateralUsd: 500,
     maxDurationMinutes: 60,
-    rewardPoints: 2500,
+    rewardPoints: 8,
     expiresAt: iso(23 * 60 * 60 * 1000 + 14 * 60 * 1000),
     createdAt: iso(-2 * 60 * 60 * 1000),
     state: "active",
@@ -57,7 +57,7 @@ function buildSampleBounties(): BountyView[] {
     asset: "BTC",
     side: "short",
     minPnlPercent: 0.1,
-    rewardPoints: 500,
+    rewardPoints: 0.5,
     expiresAt: iso(5 * 60 * 60 * 1000 + 12 * 60 * 1000),
     createdAt: iso(-30 * 60 * 1000),
     state: "active",
@@ -73,7 +73,7 @@ function buildSampleBounties(): BountyView[] {
     side: "any",
     minLeverage: 100,
     minCollateralUsd: 50,
-    rewardPoints: 100,
+    rewardPoints: 0.15,
     expiresAt: iso(8 * 60 * 60 * 1000),
     createdAt: iso(-15 * 60 * 1000),
     state: "active",
@@ -88,7 +88,7 @@ function buildSampleBounties(): BountyView[] {
     asset: "BONK",
     side: "any",
     minPnlPercent: 0.1,
-    rewardPoints: 250,
+    rewardPoints: 0.5,
     expiresAt: iso(30 * 1000),
     createdAt: iso(-10 * 60 * 1000),
     state: "active",
@@ -103,7 +103,7 @@ function buildSampleBounties(): BountyView[] {
     asset: "SOL",
     side: "any",
     minCollateralUsd: 100,
-    rewardPoints: 75,
+    rewardPoints: 0.1,
     expiresAt: iso(28 * 60 * 60 * 1000),
     createdAt: iso(-1 * 60 * 60 * 1000),
     state: "active",
@@ -121,7 +121,7 @@ function buildSampleBounties(): BountyView[] {
     minPnlPercent: 5,
     minCollateralUsd: 100,
     maxDurationMinutes: 1440,
-    rewardPoints: 1000,
+    rewardPoints: 3,
     expiresAt: iso(20 * 60 * 60 * 1000),
     createdAt: iso(-6 * 60 * 60 * 1000),
     state: "claimed",
@@ -138,7 +138,7 @@ function buildSampleBounties(): BountyView[] {
     asset: "BTC",
     side: "short",
     minPnlPercent: 2,
-    rewardPoints: 400,
+    rewardPoints: 1.2,
     expiresAt: iso(-2 * 60 * 60 * 1000),
     createdAt: iso(-12 * 60 * 60 * 1000),
     state: "expired",
@@ -167,38 +167,12 @@ export default function BountiesDesignPage() {
           </p>
         </header>
 
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white text-lg font-semibold">
-              Active Bounties ({active.length})
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {active.map((b) => (
-              <BountyCard
-                key={b.id}
-                bounty={b}
-                qualifies={QUALIFIES_DEMO.has(b.id)}
-                claimDetails={
-                  QUALIFIES_DEMO.has(b.id) ? CLAIM_DETAILS_DEMO : undefined
-                }
-              />
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white text-lg font-semibold">
-              Past Bounties ({past.length})
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {past.map((b) => (
-              <BountyCard key={b.id} bounty={b} />
-            ))}
-          </div>
-        </section>
+        <SmokeBountyBoard
+          active={active}
+          past={past}
+          qualifyingIds={Array.from(QUALIFIES_DEMO)}
+          claimDetailsDemo={CLAIM_DETAILS_DEMO}
+        />
       </div>
     </main>
   );
