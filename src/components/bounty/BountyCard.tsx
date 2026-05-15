@@ -285,13 +285,8 @@ export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
   return (
     <Card as="article" variant={cardVariant} className="flex flex-col h-full">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
           <Pill className={TIER_CLASSES[bounty.tier]}>{bounty.tier}</Pill>
-          {qualifies && (
-            <Pill className="bg-green-500/15 text-green-500 font-bold">
-              You qualify
-            </Pill>
-          )}
           <Pill className="bg-light/10 text-light">{bounty.asset}</Pill>
           <span className="text-txtfade text-xs">·</span>
           <Pill className={SIDE_CLASSES[bounty.side]}>{bounty.side}</Pill>
@@ -302,6 +297,15 @@ export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
           <CountdownLabel targetIso={bounty.expiresAt} />
         )}
       </div>
+
+      {qualifies && (
+        <div className="mt-3 flex items-center">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-green-500/15 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-green-500">
+            <span aria-hidden="true">✓</span>
+            You qualify — claim this bounty
+          </span>
+        </div>
+      )}
 
       <h3 className="text-light text-lg font-semibold mt-3 mb-1">
         {bounty.title}
