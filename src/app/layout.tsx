@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { WalletProvider } from "@/components/WalletProvider";
 import { Wallpaper } from "@/components/layout/Wallpaper";
@@ -36,6 +37,18 @@ export default function RootLayout({
           <Navbar />
           {children}
         </WalletProvider>
+        <Toaster
+          position="bottom-right"
+          theme="dark"
+          toastOptions={{
+            className: "font-sans",
+            style: {
+              background: "#0c0a1d",
+              color: "#f1f5f9",
+              border: "1px solid rgba(255, 255, 255, 0.06)",
+            },
+          }}
+        />
       </body>
     </html>
   );

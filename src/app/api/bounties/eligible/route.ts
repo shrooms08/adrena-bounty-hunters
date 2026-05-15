@@ -7,6 +7,27 @@ import type { AdrenaTradeEvent, BountyRow } from "@/types";
 
 const TRADES_LIMIT = 50;
 
+export interface ClaimDetails {
+  signature: string;
+  pnlPercent: number;
+  leverage: number;
+  durationMinutes: number;
+}
+
+export interface EligibilityResponse {
+  eligibleBountyIds: string[];
+  claimMap: Record<string, ClaimDetails>;
+}
+
+function toClaimDetails(trade: AdrenaTradeEvent): ClaimDetails {
+  return {
+    signature: trade.tx_signature,
+    pnlPercent: trade.pnl_percent,
+    leverage: trade.leverage,
+    durationMinutes: trade.duration_minutes,
+  };
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const wallet = url.searchParams.get("wallet");
@@ -16,7 +37,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. Active bounties.
     const supabase = getServiceSupabase();
     const { data: bountyRows, error: bountyError } = await supabase
       .from("bounties")
@@ -27,11 +47,16 @@ export async function GET(request: Request) {
       console.error("[/api/bounties/eligible] supabase error:", bountyError);
       return NextResponse.json({ error: "db error" }, { status: 500 });
     }
+
+    const emptyResponse: EligibilityResponse = {
+      eligibleBountyIds: [],
+      claimMap: {},
+    };
+
     if (!bountyRows || bountyRows.length === 0) {
-      return NextResponse.json({ eligibleBountyIds: [] });
+      return NextResponse.json(emptyResponse);
     }
 
-    // 2. Wallet's recent close/liquidation positions, newest first.
     const envelope = await fetchPositions(wallet, {
       status: ["close", "liquidate"],
       sort: "DESC",
@@ -51,19 +76,23 @@ export async function GET(request: Request) {
     }
 
     if (tradeEvents.length === 0) {
-      return NextResponse.json({ eligibleBountyIds: [] });
+      return NextResponse.json(emptyResponse);
     }
 
-    // 3. For each bounty, find any trade that satisfies it.
     const eligibleBountyIds: string[] = [];
+    const claimMap: Record<string, ClaimDetails> = {};
     for (const bounty of bountyRows as BountyRow[]) {
-      const matched = tradeEvents.some(
+      const match = tradeEvents.find(
         (trade) => evaluateTrade(bounty, trade).matches,
       );
-      if (matched) eligibleBountyIds.push(bounty.id);
+      if (match && match.tx_signature) {
+        eligibleBountyIds.push(bounty.id);
+        claimMap[bounty.id] = toClaimDetails(match);
+      }
     }
 
-    return NextResponse.json({ eligibleBountyIds });
+    const response: EligibilityResponse = { eligibleBountyIds, claimMap };
+    return NextResponse.json(response);
   } catch (error) {
     console.error("[/api/bounties/eligible] uncaught:", error);
     return NextResponse.json(

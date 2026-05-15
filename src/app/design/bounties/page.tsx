@@ -18,6 +18,15 @@ export const dynamic = "force-dynamic";
 // the pill against both muted and bright tier backgrounds.
 const QUALIFIES_DEMO = new Set(["b-common-no-hunters", "b-legendary-full"]);
 
+// Smoke-only stub claim details so the Claim CTA click path doesn't crash.
+// Real production data comes from the eligibility endpoint's claimMap.
+const CLAIM_DETAILS_DEMO = {
+  signature: "demo-signature-not-real",
+  pnlPercent: 7.3,
+  leverage: 5,
+  durationMinutes: 42,
+};
+
 function buildSampleBounties(): BountyView[] {
   const now = Date.now();
   const iso = (offsetMs: number) => new Date(now + offsetMs).toISOString();
@@ -170,6 +179,9 @@ export default function BountiesDesignPage() {
                 key={b.id}
                 bounty={b}
                 qualifies={QUALIFIES_DEMO.has(b.id)}
+                claimDetails={
+                  QUALIFIES_DEMO.has(b.id) ? CLAIM_DETAILS_DEMO : undefined
+                }
               />
             ))}
           </div>

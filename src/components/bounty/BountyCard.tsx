@@ -6,12 +6,17 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import type { ClaimDetails } from "@/hooks/useEligibleBounties";
 import type { BountySide, BountyTier, BountyView } from "@/types";
 
 interface BountyCardProps {
   bounty: BountyView;
-  onClaim?: (bounty: BountyView) => void;
+  onClaim?: (
+    bounty: BountyView,
+    claimDetails?: ClaimDetails,
+  ) => void | Promise<void>;
   qualifies?: boolean;
+  claimDetails?: ClaimDetails;
 }
 
 interface Countdown {
@@ -184,10 +189,16 @@ function CountdownLabel({ targetIso }: { targetIso: string }) {
   );
 }
 
-export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
+export function BountyCard({
+  bounty,
+  onClaim,
+  qualifies,
+  claimDetails,
+}: BountyCardProps) {
   const { publicKey } = useWallet();
   const { setVisible: setWalletModalVisible } = useWalletModal();
   const isWalletConnected = publicKey !== null;
+  const [isClaiming, setIsClaiming] = useState(false);
   const isClaimed = bounty.state === "claimed";
   const isExpired = bounty.state === "expired";
   const cardVariant =
@@ -270,12 +281,20 @@ export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
 
   const visibleStats = stats.slice(0, 4);
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (!isWalletConnected) {
       setWalletModalVisible(true);
       return;
     }
-    onClaim?.(bounty);
+    if (!onClaim) return;
+    setIsClaiming(true);
+    try {
+      await onClaim(bounty, claimDetails);
+    } catch {
+      // Parent surfaces failure (e.g. toast). Card just resets its loading state.
+    } finally {
+      setIsClaiming(false);
+    }
   };
 
   const handleViewClaimer = () => {
@@ -339,7 +358,12 @@ export function BountyCard({ bounty, onClaim, qualifies }: BountyCardProps) {
       <div className="flex-grow" />
 
       {bounty.state === "active" && (
-        <Button variant="execute" fullWidth onClick={handleClaim}>
+        <Button
+          variant="execute"
+          fullWidth
+          onClick={handleClaim}
+          loading={isClaiming}
+        >
           {isWalletConnected ? "Claim Bounty" : "Connect Wallet"}
         </Button>
       )}

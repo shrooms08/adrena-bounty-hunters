@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+
+export interface ClaimDetails {
+  signature: string;
+  pnlPercent: number;
+  leverage: number;
+  durationMinutes: number;
+}
 
 interface EligibilityState {
   wallet: string | null;
   ids: Set<string>;
+  claimMap: Record<string, ClaimDetails>;
   loading: boolean;
   error: string | null;
 }
@@ -13,16 +21,19 @@ interface EligibilityState {
 const INITIAL_STATE: EligibilityState = {
   wallet: null,
   ids: new Set(),
+  claimMap: {},
   loading: false,
   error: null,
 };
 
 const EMPTY_IDS: Set<string> = new Set();
+const EMPTY_MAP: Record<string, ClaimDetails> = {};
 
 export function useEligibleBounties() {
   const { publicKey } = useWallet();
   const walletStr = publicKey?.toBase58() ?? null;
   const [state, setState] = useState<EligibilityState>(INITIAL_STATE);
+  const [refetchTick, setRefetchTick] = useState(0);
 
   useEffect(() => {
     if (!walletStr) return;
@@ -34,13 +45,17 @@ export function useEligibleBounties() {
         if (!res.ok) {
           throw new Error(`eligibility check failed: ${res.status}`);
         }
-        return res.json() as Promise<{ eligibleBountyIds: string[] }>;
+        return res.json() as Promise<{
+          eligibleBountyIds: string[];
+          claimMap: Record<string, ClaimDetails>;
+        }>;
       })
       .then((data) => {
         if (cancelled) return;
         setState({
           wallet: walletStr,
           ids: new Set(data.eligibleBountyIds),
+          claimMap: data.claimMap ?? {},
           loading: false,
           error: null,
         });
@@ -50,6 +65,7 @@ export function useEligibleBounties() {
         setState({
           wallet: walletStr,
           ids: EMPTY_IDS,
+          claimMap: EMPTY_MAP,
           loading: false,
           error: err instanceof Error ? err.message : "unknown",
         });
@@ -58,15 +74,16 @@ export function useEligibleBounties() {
     return () => {
       cancelled = true;
     };
-  }, [walletStr]);
+  }, [walletStr, refetchTick]);
 
-  // Derive at render time: if the stored wallet doesn't match the current
-  // wallet (just disconnected or switched), return empty. The effect will
-  // refetch and update on the next tick.
+  const refetch = useCallback(() => setRefetchTick((n) => n + 1), []);
+
   const matchesCurrentWallet = state.wallet === walletStr;
   return {
     eligibleBountyIds: matchesCurrentWallet ? state.ids : EMPTY_IDS,
+    claimMap: matchesCurrentWallet ? state.claimMap : EMPTY_MAP,
     loading: matchesCurrentWallet ? state.loading : false,
     error: matchesCurrentWallet ? state.error : null,
+    refetch,
   };
 }
