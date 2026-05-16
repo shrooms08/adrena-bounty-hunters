@@ -26,7 +26,7 @@ export function SmokeBountyBoard({
       await new Promise((resolve) => setTimeout(resolve, 800));
       if (Math.random() < 0.6) {
         toast.success(`Claimed: ${bounty.title}`, {
-          description: `+${bounty.rewardPoints} mutagen · simulated`,
+          description: `+${bounty.rewardPoints} MTG · simulated`,
         });
         return;
       }
