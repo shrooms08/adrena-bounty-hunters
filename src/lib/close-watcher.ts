@@ -111,6 +111,16 @@ export async function handleEvent(
   const positionPda = event.decoded.position;
   const positionIdOnchain = event.decoded.position_id;
 
+  // Guard: some close/liquidate events arrive without a decoded position PDA
+  // (partial decode, relay edge cases). Skip them rather than crashing the
+  // watcher on the NOT NULL constraint. Log so we can investigate patterns.
+  if (!positionPda) {
+    console.warn(
+      `[close-watcher] skipping ${kind} event without position_pda, tx=${txSignature.slice(0, 16)}…`,
+    );
+    return;
+  }
+
   // -------------------------------------------------------------------------
   // Step 1: persist recent_closes. Loud failure if this errors — we cannot
   // process events without an audit trail. Duplicate insert (unique
