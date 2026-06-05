@@ -8,7 +8,6 @@ export type {
   TradingAsset,
   BountyRow,
   BountyView,
-  AlphaTrader,
   TradeCallout,
   LiveFeedItem,
   TraderProgress,

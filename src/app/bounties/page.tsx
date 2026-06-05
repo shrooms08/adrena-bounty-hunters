@@ -3,16 +3,15 @@
 import { useCallback } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "sonner";
-import { AlphaHour } from "@/components/alpha-hour";
 import { BountyBoard } from "@/components/bounty-board";
 import { ClaimFeed } from "@/components/ClaimFeed";
 import { StatsBar } from "@/components/stats-bar";
 import { useBounties } from "@/hooks/useBounties";
+import { useClaims } from "@/hooks/useClaims";
 import {
   useEligibleBounties,
   type ClaimDetails,
 } from "@/hooks/useEligibleBounties";
-import { alphaTrader } from "@/lib/bounty-data";
 import type { BountyView } from "@/types";
 
 function BountyBoardSkeleton() {
@@ -38,6 +37,7 @@ function BountyBoardSkeleton() {
 
 export default function BountiesPage() {
   const { bounties, loading, refetch: refetchBounties } = useBounties();
+  const { claims } = useClaims();
   const { publicKey } = useWallet();
   const {
     eligibleBountyIds,
@@ -47,6 +47,14 @@ export default function BountiesPage() {
 
   const activeCount = bounties.filter((b) => b.status === "active").length;
   const claimedCount = bounties.filter((b) => b.status === "claimed").length;
+
+  const leverages = claims
+    .map((c) => c.leverage)
+    .filter((lev): lev is number => typeof lev === "number");
+  const avgLeverage =
+    leverages.length === 0
+      ? null
+      : leverages.reduce((sum, lev) => sum + lev, 0) / leverages.length;
 
   const handleClaim = useCallback(
     async (bounty: BountyView, claimDetails?: ClaimDetails) => {
@@ -97,9 +105,11 @@ export default function BountiesPage() {
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-[1400px] lg:px-6">
-        <AlphaHour trader={alphaTrader} />
-
-        <StatsBar activeCount={activeCount} claimedCount={claimedCount} />
+        <StatsBar
+          activeCount={activeCount}
+          claimedCount={claimedCount}
+          avgLeverage={avgLeverage}
+        />
 
         <div className="flex gap-8">
           <div className="min-w-0 flex-1">

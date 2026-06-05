@@ -5,7 +5,7 @@ export type BountySide = "long" | "short" | "any";
 export type TradeDirection = "LONG" | "SHORT";
 export type TradingAsset = "SOL" | "BTC" | "BONK";
 
-// Legacy alias — AlphaTrader/TradeCallout etc. reference it. Kept to preserve
+// Legacy alias — TradeCallout etc. reference it. Kept to preserve
 // existing definitions verbatim. New code should use TradingAsset.
 export type Asset = TradingAsset;
 
@@ -93,15 +93,6 @@ export function bountyRowToView(
 export interface TraderProgress {
   trader: string;
   progress: number;
-}
-
-export interface AlphaTrader {
-  handle: string;
-  asset: Asset;
-  direction: "LONG" | "SHORT";
-  pnlPercent: number;
-  leverage: number;
-  conviction: number;
 }
 
 export interface TradeCallout {

@@ -2,27 +2,31 @@
 
 import { motion } from "framer-motion";
 import { TIER_VISUAL } from "@/components/tier-visuals";
+import { useClaims } from "@/hooks/useClaims";
+import { truncateWallet } from "@/lib/constants";
 import type { BountyTier } from "@/types";
 
-interface LiveClaimItem {
-  wallet: string;
-  title: string;
-  tier: BountyTier;
-  points: number;
-  ago: string;
+function formatNumber(amount: number): string {
+  return amount.toLocaleString("en-US", { maximumFractionDigits: 2 });
 }
 
-const liveClaims: LiveClaimItem[] = [
-  { wallet: "7xKp...3mNq", title: "Quick Flip: SOL", tier: "common", points: 50, ago: "2m ago" },
-  { wallet: "4mDz...KpV", title: "Speed Demon: BTC", tier: "rare", points: 150, ago: "5m ago" },
-  { wallet: "9pBn...GdF", title: "Lightning Round", tier: "legendary", points: 500, ago: "8m ago" },
-  { wallet: "2sLw...TdV", title: "The BONK Job", tier: "common", points: 50, ago: "12m ago" },
-  { wallet: "5kHn...MpL", title: "Bear Trap: BTC", tier: "rare", points: 150, ago: "18m ago" },
-  { wallet: "8fVw...JhC", title: "Whale Hunter: SOL", tier: "legendary", points: 500, ago: "22m ago" },
-  { wallet: "3tBz...CpN", title: "Precision Strike: BTC", tier: "common", points: 50, ago: "25m ago" },
-];
+function timeAgo(iso: string): string {
+  const diffSec = Math.max(
+    0,
+    Math.floor((Date.now() - new Date(iso).getTime()) / 1000),
+  );
+  if (diffSec < 60) return `${diffSec}s ago`;
+  const min = Math.floor(diffSec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const days = Math.floor(hr / 24);
+  return `${days}d ago`;
+}
 
 export function ClaimFeed() {
+  const { claims } = useClaims();
+
   return (
     <aside className="overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1a1735]">
       <header className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3.5">
@@ -32,37 +36,49 @@ export function ClaimFeed() {
         </span>
       </header>
       <div className="max-h-[540px] overflow-y-auto">
-        {liveClaims.map((item, idx) => {
-          const visual = TIER_VISUAL[item.tier];
-          return (
-            <motion.div
-              key={`${item.wallet}-${item.title}`}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.05, duration: 0.22 }}
-              className="border-b border-white/[0.04] px-4 py-3 last:border-b-0"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-1.5 w-1.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: visual.color }}
-                />
-                <span className="font-mono text-xs text-gray-500">{item.wallet}</span>
-                <span
-                  className="truncate text-xs font-medium"
-                  style={{ color: visual.color }}
-                  title={item.title}
-                >
-                  {item.title}
-                </span>
-                <span className="ml-auto shrink-0 tabular-nums font-heading text-xs font-semibold text-emerald-400">
-                  +{item.points}
-                </span>
-              </div>
-              <p className="mt-1 pl-[14px] text-[10px] text-gray-600">{item.ago}</p>
-            </motion.div>
-          );
-        })}
+        {claims.length === 0 ? (
+          <p className="px-4 py-8 text-center text-xs leading-relaxed text-gray-500">
+            No claims yet — be the first to hunt a bounty.
+          </p>
+        ) : (
+          claims.map((item, idx) => {
+            const tier = (item.bounty_tier ?? "common") as BountyTier;
+            const visual = TIER_VISUAL[tier];
+            const title = item.bounty_title ?? "Bounty";
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.05, duration: 0.22 }}
+                className="border-b border-white/[0.04] px-4 py-3 last:border-b-0"
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: visual.color }}
+                  />
+                  <span className="font-mono text-xs text-gray-500">
+                    {truncateWallet(item.wallet)}
+                  </span>
+                  <span
+                    className="truncate text-xs font-medium"
+                    style={{ color: visual.color }}
+                    title={title}
+                  >
+                    {title}
+                  </span>
+                  <span className="ml-auto shrink-0 tabular-nums font-heading text-xs font-semibold text-emerald-400">
+                    +{formatNumber(item.reward_points ?? 0)} MTG
+                  </span>
+                </div>
+                <p className="mt-1 pl-[14px] text-[10px] text-gray-600">
+                  {timeAgo(item.claimed_at)}
+                </p>
+              </motion.div>
+            );
+          })
+        )}
       </div>
     </aside>
   );
