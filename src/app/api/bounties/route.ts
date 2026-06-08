@@ -15,17 +15,31 @@ export async function GET() {
       throw new Error(expireError.message);
     }
 
-    const { data, error } = await supabase
+    // Active bounties: the claimable board, all of them.
+    const { data: active, error: activeError } = await supabase
       .from("bounties")
       .select("*")
-      .order("status", { ascending: true })
+      .eq("status", "active")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      throw new Error(error.message);
+    if (activeError) {
+      throw new Error(activeError.message);
     }
 
-    return NextResponse.json({ data: data ?? [] });
+    // Claimed bounties: social proof, cap at the 20 most recent wins.
+    // Expired-unclaimed bounties are intentionally excluded entirely.
+    const { data: claimed, error: claimedError } = await supabase
+      .from("bounties")
+      .select("*")
+      .eq("status", "claimed")
+      .order("claimed_at", { ascending: false })
+      .limit(20);
+
+    if (claimedError) {
+      throw new Error(claimedError.message);
+    }
+
+    return NextResponse.json({ data: [...(active ?? []), ...(claimed ?? [])] });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to fetch bounties";
     return NextResponse.json({ error: message }, { status: 500 });
