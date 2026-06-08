@@ -63,7 +63,7 @@ export default function BountiesPage() {
         return;
       }
       if (!claimDetails) {
-        toast.error("Missing claim details — please refresh and try again");
+        toast.error("You don't qualify for this bounty yet — complete a matching trade first");
         return;
       }
 
