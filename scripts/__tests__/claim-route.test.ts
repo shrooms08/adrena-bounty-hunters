@@ -272,11 +272,11 @@ test("400 on signature with non-base58 characters", async () => {
 // Datapi resolution tests
 // ===========================================================================
 
-test("422 when /transaction-position throws (endpoint pending fix)", async () => {
+test("422 when the signature → position lookup throws", async () => {
   const { deps } = buildDeps({ txPos: "throw" });
   const r = await handleClaim(makeRequest(VALID_BODY), deps);
   assert.equal(r.status, 422);
-  assert.match(String(r.body.error), /transaction-position lookup failed/i);
+  assert.match(String(r.body.error), /position lookup failed/i);
   assert.equal(r.body.signature, SIGNATURE);
 });
 

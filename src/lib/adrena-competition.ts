@@ -16,6 +16,11 @@
 
 import { Decimal } from "decimal.js";
 
+// Type-only import — the transaction-position shape is shared with the datapi
+// client (where it originated). datapi imports nothing from here, so this is
+// a one-way dependency with no cycle, and `import type` is erased at runtime.
+import type { ApiTransactionPosition, PositionSide } from "@/lib/adrena-datapi";
+
 const DEFAULT_BASE_URL = "https://adrena-competition-service.onrender.com";
 const DEFAULT_TIMEOUT_MS = 60_000; // wide for Render cold starts; tighten on hot calls
 const RETRY_DELAYS_MS = [500, 1_000, 2_000] as const;
@@ -286,4 +291,37 @@ export async function fetchPositionSchema(
     options,
   );
   return body;
+}
+
+/**
+ * Resolve a transaction signature → {user_wallet, position_id, method, side}.
+ *
+ * This endpoint lives on the competition service (key-in-path), NOT the public
+ * datapi host — that's the whole reason this function exists here rather than
+ * in adrena-datapi. Verified live decoding real close signatures. A throw means
+ * the lookup genuinely failed (bad/unknown signature, network, cold start).
+ *
+ * Note: the API returns `position_id` as a string ("111304") — Number()-convert
+ * it. `side` arrives as a numeric flag alongside a `side_label`.
+ */
+export async function fetchTransactionPosition(
+  signature: string,
+  options: RequestOptions = {},
+): Promise<ApiTransactionPosition> {
+  const params = new URLSearchParams();
+  params.set("signature", signature);
+  const body = await getJson<{ success: boolean; data: ApiTransactionPosition }>(
+    "/transaction-position",
+    params,
+    options,
+  );
+  const d = body.data;
+  return {
+    position_id: Number(d.position_id),
+    method: String(d.method),
+    transaction_date: String(d.transaction_date),
+    slot: Number(d.slot),
+    side: d.side as PositionSide,
+    user_wallet: String(d.user_wallet),
+  };
 }

@@ -73,12 +73,11 @@ export async function handleClaim(
   const { bounty_id, wallet, signature } = validation.body;
 
   // -------------------------------------------------------------------------
-  // 2. Resolve signature → position via /transaction-position.
-  // /transaction-position is currently returning 400 for every signature
-  // we test against (Phase 1 sigs and fresh last_ix values both rejected).
-  // We surface this as a clear 422 so users know it's not their tx — it's
-  // the upstream endpoint pending a fix from the Adrena team. Update once
-  // br0wnD3v ships the fix.
+  // 2. Resolve signature → position context via /transaction-position (on the
+  // competition service). This maps the signature to the signer wallet,
+  // position id, and method. A throw here means the lookup genuinely failed —
+  // an unknown/invalid signature, a network error, or a cold start — so we
+  // surface a 422 and let the user retry.
   // -------------------------------------------------------------------------
   let txPos: ApiTransactionPosition;
   try {
@@ -87,8 +86,7 @@ export async function handleClaim(
     return {
       status: 422,
       body: {
-        error:
-          "Could not verify trade. /transaction-position lookup failed — endpoint pending fix from Adrena team",
+        error: "Could not verify trade — position lookup failed. Please try again.",
         signature,
       },
     };

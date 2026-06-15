@@ -488,39 +488,10 @@ export async function fetchPositions(
   return parsed;
 }
 
-/**
- * Resolve a transaction signature → {user_wallet, position_id, method, side}.
- *
- * **UNVERIFIED — pending sample request from Adrena team.** As of build time
- * this endpoint returns 400 for every signature we've thrown at it, including
- * Phase 1 verified close sigs and fresh `last_ix` values from successful
- * /v4/position rows. The endpoint exists (returns Adrena's own error envelope,
- * not Fastify's default) but rejects the input shape. Manual-claim
- * verification depends on this — auto-claim via WebSocket does not, so we are
- * not blocked on Phase 2 progress. Re-test once br0wnD3v shares a known-good
- * sample.
- */
-export async function fetchPositionBySignature(
-  signature: string,
-  options: RequestOptions = {},
-): Promise<ApiTransactionPosition> {
-  const params = new URLSearchParams();
-  params.set("signature", signature);
-  const body = await getJson<{ success: boolean; data: ApiTransactionPosition }>(
-    "/transaction-position",
-    params,
-    options,
-  );
-  const d = body.data;
-  return {
-    position_id: Number(d.position_id),
-    method: String(d.method),
-    transaction_date: String(d.transaction_date),
-    slot: Number(d.slot),
-    side: d.side as PositionSide,
-    user_wallet: String(d.user_wallet),
-  };
-}
+// NOTE: /transaction-position is NOT served by this datapi host — it lives on
+// the competition service. The signature→position resolver therefore lives in
+// adrena-competition.ts (fetchTransactionPosition). The ApiTransactionPosition
+// type stays here as the canonical shared shape.
 
 export async function fetchTraderInfo(
   userWallet: string,

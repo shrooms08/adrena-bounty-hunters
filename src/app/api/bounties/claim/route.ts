@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 
-import {
-  fetchPositionBySignature,
-  fetchPositions,
-} from "@/lib/adrena-datapi";
+import { fetchTransactionPosition } from "@/lib/adrena-competition";
+import { fetchPositions } from "@/lib/adrena-datapi";
 import { evaluateTrade } from "@/lib/bounty-evaluator";
 import { handleClaim } from "@/lib/claim-route-handler";
 import { getServiceSupabase } from "@/lib/supabase";
@@ -11,7 +9,7 @@ import { getServiceSupabase } from "@/lib/supabase";
 export async function POST(request: Request) {
   const result = await handleClaim(request, {
     supabase: getServiceSupabase(),
-    fetchPositionBySignature,
+    fetchPositionBySignature: fetchTransactionPosition,
     fetchPositionByDbId: async (wallet, positionId) => {
       const env = await fetchPositions(wallet, {
         position_id: positionId,
