@@ -315,9 +315,10 @@ export async function fetchTransactionPosition(
     params,
     options,
   );
-  const d = body.data;
+  const d = body.data as typeof body.data & { position?: unknown };
   return {
     position_id: Number(d.position_id),
+    position_pubkey: String(d.position ?? ""), // on-chain PDA; matches datapi `pubkey`
     method: String(d.method),
     transaction_date: String(d.transaction_date),
     slot: Number(d.slot),

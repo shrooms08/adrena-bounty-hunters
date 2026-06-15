@@ -182,6 +182,7 @@ function buildDeps(scenario: Scenario = {}): {
       if (scenario.txPos === "null-wallet") {
         return {
           position_id: 108538,
+          position_pubkey: "GZ9XfWwgTRhkma2Y91Q9r1XKotNXYjBnKKabj19rhT71",
           method: "closePositionLong",
           transaction_date: "2026-03-04T14:33:06.000Z",
           slot: 1,
@@ -192,6 +193,7 @@ function buildDeps(scenario: Scenario = {}): {
       return (
         scenario.txPos ?? {
           position_id: 108538,
+          position_pubkey: "GZ9XfWwgTRhkma2Y91Q9r1XKotNXYjBnKKabj19rhT71",
           method: "closePositionLong",
           transaction_date: "2026-03-04T14:33:06.000Z",
           slot: 1,
@@ -200,7 +202,7 @@ function buildDeps(scenario: Scenario = {}): {
         }
       );
     },
-    fetchPositionByDbId: async () => {
+    fetchPositionByPubkey: async () => {
       if (scenario.position === "throw") {
         throw new Error("simulated /v4/position 503");
       }

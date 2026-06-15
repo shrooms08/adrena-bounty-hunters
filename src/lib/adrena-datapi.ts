@@ -113,6 +113,10 @@ export interface ApiPositionsEnvelope {
 
 export interface ApiTransactionPosition {
   position_id: number;
+  // On-chain position PDA. Competition service calls this `position`; datapi
+  // calls it `pubkey`. It is the only key that matches across both services —
+  // position_id does NOT (they use independent id schemes).
+  position_pubkey: string;
   method: string; // e.g. "openPositionLong" | "closePositionLong" | "liquidateLong" | ...
   transaction_date: string;
   slot: number;

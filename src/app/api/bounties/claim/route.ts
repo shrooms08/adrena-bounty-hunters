@@ -10,12 +10,12 @@ export async function POST(request: Request) {
   const result = await handleClaim(request, {
     supabase: getServiceSupabase(),
     fetchPositionBySignature: fetchTransactionPosition,
-    fetchPositionByDbId: async (wallet, positionId) => {
-      const env = await fetchPositions(wallet, {
-        position_id: positionId,
-        limit: 1,
-      });
-      return env.positions[0] ?? null;
+    fetchPositionByPubkey: async (wallet, pubkey) => {
+      // datapi has no pubkey query param, so fetch the wallet's recent
+      // positions and match on the PDA. The claimed trade just closed, so
+      // it's among the most recent; 20 is a safe window.
+      const env = await fetchPositions(wallet, { limit: 20 });
+      return env.positions.find((p) => p.pubkey === pubkey) ?? null;
     },
     evaluator: evaluateTrade,
   });

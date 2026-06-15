@@ -25,9 +25,9 @@ const BOUNTY_ID_LEN_MAX = 64;
 export interface ClaimRouteDeps {
   supabase: SupabaseClient;
   fetchPositionBySignature: (signature: string) => Promise<ApiTransactionPosition>;
-  fetchPositionByDbId: (
+  fetchPositionByPubkey: (
     wallet: string,
-    positionId: number,
+    pubkey: string,
   ) => Promise<ApiPosition | null>;
   evaluator: Evaluator;
 }
@@ -110,7 +110,7 @@ export async function handleClaim(
 
   let position: ApiPosition | null;
   try {
-    position = await deps.fetchPositionByDbId(wallet, txPos.position_id);
+    position = await deps.fetchPositionByPubkey(wallet, txPos.position_pubkey);
   } catch {
     return {
       status: 503,
